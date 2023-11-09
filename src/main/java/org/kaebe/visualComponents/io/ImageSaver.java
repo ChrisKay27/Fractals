@@ -1,4 +1,4 @@
-package org.kaebe;
+package org.kaebe.visualComponents.io;
 
 import java.awt.image.BufferedImage;
 

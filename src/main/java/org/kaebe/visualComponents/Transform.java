@@ -1,4 +1,6 @@
-package org.kaebe;
+package org.kaebe.visualComponents;
+
+import org.kaebe.Vector;
 
 public class Transform {
     private Vector position;

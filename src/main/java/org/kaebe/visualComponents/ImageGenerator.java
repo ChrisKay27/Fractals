@@ -1,7 +1,6 @@
-package org.kaebe;
+package org.kaebe.visualComponents;
 
-import org.kaebe.visualComponents.LineSegment;
-import org.kaebe.visualComponents.VisualComponent;
+import org.kaebe.Vector;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

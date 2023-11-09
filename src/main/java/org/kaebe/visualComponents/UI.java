@@ -1,4 +1,6 @@
-package org.kaebe;
+package org.kaebe.visualComponents;
+
+import org.kaebe.visualComponents.ImageGenerator;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -9,7 +11,7 @@ public class UI {
 
     private final List<BufferedImage> images = new ArrayList<>();
     private final int width = 1000, height = 1000;
-    private long delay = 16;
+    private long delay = 0;
     private boolean killCurrentThread;
     private ImageGenerator imageGenerator;
     private JLabel lastLabel;
@@ -19,7 +21,7 @@ public class UI {
     private JFrame frame;
 
     public UI() {
-        frame = new JFrame("HelloWorldSwing");
+        frame = new JFrame("Random Circle Spinner Thing");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         contentPane = new JPanel();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
@@ -29,9 +31,9 @@ public class UI {
         topBar.setLayout(new BoxLayout(topBar, BoxLayout.X_AXIS));
         contentPane.add(topBar);
 
-        JTextField innerSpeedTextField = new JTextField("1.1666");
-        JTextField middleSpeedTextField = new JTextField("2.1333");
-        JTextField outerSpeedTextField = new JTextField("3.93666");
+        JTextField innerSpeedTextField = new JTextField("1");
+        JTextField middleSpeedTextField = new JTextField("1");
+        JTextField outerSpeedTextField = new JTextField("8");
 
         JButton generateButton = getGenerateButton(innerSpeedTextField, middleSpeedTextField, outerSpeedTextField);
         topBar.add(generateButton);
@@ -39,7 +41,7 @@ public class UI {
         topBar.add(middleSpeedTextField);
         topBar.add(outerSpeedTextField);
 
-        JTextField delayTextField = new JTextField("16");
+        JTextField delayTextField = new JTextField("0");
         delayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 delay = Long.parseLong(delayTextField.getText());
@@ -59,7 +61,7 @@ public class UI {
 //                }
 //            }).start();
 //        });
-
+        frame.setLocationRelativeTo(null);
         frame.pack();
         frame.setVisible(true);
     }
@@ -67,6 +69,7 @@ public class UI {
     private JButton getGenerateButton(JTextField innerSpeedTextField, JTextField middleSpeedTextField, JTextField outerSpeedTextField) {
         JButton generateButton = new JButton("Generate");
         generateButton.addActionListener(e -> {
+
             if(currentImage != null) {
                 killCurrentThread = true;
                 imageGenerator.stop();
@@ -80,6 +83,7 @@ public class UI {
             imageGenerator = new ImageGenerator(width, height);
             imageGenerator.generate(this::addImage, 100000, Double.parseDouble(innerSpeedTextField.getText()),
                     Double.parseDouble(middleSpeedTextField.getText()), Double.parseDouble(outerSpeedTextField.getText()), () -> delay);
+
 
 //            new Thread(()->{
 //                while (true) {
@@ -119,6 +123,7 @@ public class UI {
         currentImage = bufferedImage;
 
         SwingUtilities.invokeLater(()-> {
+
             if( currentImage == null )
                 return;
 
@@ -132,6 +137,7 @@ public class UI {
 
             contentPane.add(label);
             frame.pack();
+            frame.setLocationRelativeTo(null);
         });
     }
 }
