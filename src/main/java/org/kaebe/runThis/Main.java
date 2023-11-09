@@ -17,9 +17,36 @@ public class Main {
         frame.setSize(1000, 1000);
         frame.setLocation(500,20);
 
-
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
+        JPanel mandelbrotPanel = getMandelbrotPanel(frame);
+        contentPane.add(mandelbrotPanel);
+
+        JPanel circlePanel = getCirclePanel(frame);
+        contentPane.add(circlePanel);
+
+        frame.pack();
+        frame.setVisible(true);
+    }
+
+    private static JPanel getCirclePanel(JFrame frame) {
+        JPanel circlePanel = new JPanel();
+        JButton circleButton = new JButton("Circle Thingy");
+        circleButton.addActionListener(e -> {
+            frame.setVisible(false);
+            new Thread(() -> {
+                UI ui = new UI();
+            }).start();
+        });
+        circlePanel.add(circleButton);
+
+        ImageIcon circleImageIcon = new ImageIcon("src/main/resources/circle.png");
+        JLabel circleLabel = new JLabel(circleImageIcon);
+        circlePanel.add(circleLabel);
+        return circlePanel;
+    }
+
+    private static JPanel getMandelbrotPanel(JFrame frame) {
         JPanel mandelbrotPanel = new JPanel();
         mandelbrotPanel.setLayout(new BoxLayout(mandelbrotPanel, BoxLayout.X_AXIS));
 
@@ -35,25 +62,6 @@ public class Main {
         ImageIcon imageIcon = new ImageIcon("src/main/resources/mandelbrot.png");
         JLabel mandelbrotLabel = new JLabel(imageIcon);
         mandelbrotPanel.add(mandelbrotLabel);
-        contentPane.add(mandelbrotPanel);
-
-
-        JPanel circlePanel = new JPanel();
-        JButton circleButton = new JButton("Circle Thingy");
-        circleButton.addActionListener(e -> {
-            frame.setVisible(false);
-            new Thread(() -> {
-                org.kaebe.visualComponents.UI ui = new org.kaebe.visualComponents.UI();
-            }).start();
-        });
-        circlePanel.add(circleButton);
-
-        ImageIcon circleImageIcon = new ImageIcon("src/main/resources/circle.png");
-        JLabel circleLabel = new JLabel(circleImageIcon);
-        circlePanel.add(circleLabel);
-        contentPane.add(circlePanel);
-
-        frame.pack();
-        frame.setVisible(true);
+        return mandelbrotPanel;
     }
 }
