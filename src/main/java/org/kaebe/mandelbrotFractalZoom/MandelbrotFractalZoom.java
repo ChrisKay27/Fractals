@@ -17,30 +17,33 @@ import static org.kaebe.mandelbrotFractalZoom.MandelbrotCalculator.MAX_ITERATION
 public class MandelbrotFractalZoom {
 
     public static final int WIDTH = 1920;
-    public static final int HEIGHT = 1080;
+    public static final int HEIGHT = 1000;
     private final Icon icon;
     private final JLabel label;
     private final JPanel contentPane;
-    private double scale;
-    private double xOffset;
-    private double yOffset;
+    private double scale = -3.978334271458669;
+    private double xOffset = -0.6825430516844277;
+    private double yOffset = 0.0033971134705536345;;
     private BufferedImage image = new BufferedImage(1,1,BufferedImage.TYPE_INT_RGB);
+    private ColoringScheme coloringScheme = ColoringScheme.ITERATIONS_HSB_TO_RGB;
 
     public MandelbrotFractalZoom() {
         JFrame frame = new JFrame("Mandelbrot Fractal Zoom");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(WIDTH, HEIGHT);
+        frame.setSize(1920, 1080);
         frame.setVisible(true);
 
         contentPane = new JPanel();
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         frame.setContentPane(contentPane);
         icon = new ImageIcon(image);
         label = new JLabel(icon);
+        contentPane.add(new JLabel("Click to zoom in, right click to zoom out"));
+        contentPane.add(new MandelBrotControlPanel(coloringScheme -> {
+            this.coloringScheme = coloringScheme;
+            updateImage();
+        }));
         contentPane.add(label);
-
-        scale = -3.978334271458669; //-1 + (Math.random() * 2);
-        xOffset = -0.6825430516844277;//-1 + (Math.random() * 2);
-        yOffset = 0.0033971134705536345;//-1 + (Math.random() * 2);
 
         updateImage();
 
@@ -172,14 +175,23 @@ public class MandelbrotFractalZoom {
      * @return
      */
     private Color getColor(int iterations) {
-        int map = (int) map(iterations, 0, MAX_ITERATIONS, 0, 256);
-        if( map < 64 )
-            return new Color(map,map/2,0);
-        if( map < 128 )
-            return new Color(0,map,0);
-        if( map < 192 )
-            return new Color(0,map/2,map);
-        return new Color(map);
+        switch (coloringScheme){
+            case CUSTOM1 -> {
+                int map = (int) map(iterations, 0, MAX_ITERATIONS, 0, 256);
+                if( map < 64 )
+                    return new Color(map,map/2,0);
+                if( map < 128 )
+                    return new Color(0,map,0);
+                if( map < 192 )
+                    return new Color(0,map/2,map);
+                return new Color(map);
+            }
+            case ITERATIONS_HSB_TO_RGB -> {
+                int rgb = Color.HSBtoRGB((float) iterations / MAX_ITERATIONS, 1, 1);
+                return new Color(rgb);
+            }
+        }
+        return Color.BLACK;
     }
 
     private int map(int value, int maxValue, int newMin, int newMax) {
