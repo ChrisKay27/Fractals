@@ -13,11 +13,11 @@ public class ImageGenerator {
 
     private final List<VisualComponent> components = new ArrayList<>();
     private BufferedImage mainImage;
-    private Consumer<BufferedImage> images;
+    private Consumer<BufferedImage> frameAccepter;
     private double innerSpeed;
     private double middleSpeed;
     private double outerSpeed;
-    private Supplier<Long> delay;
+    private long runTime;
 
     private int dotSize = 2;
     private boolean stop;
@@ -26,12 +26,13 @@ public class ImageGenerator {
         mainImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     }
 
-    public void generate(Consumer<BufferedImage> images, int frames, double innerSpeed, double middleSpeed, double outerSpeed, Supplier<Long> delay) {
-        this.images = images;
+    public void generate(Consumer<BufferedImage> frameAccepter, int frames, double innerSpeed, double middleSpeed, double outerSpeed, long runTime) {
+        this.frameAccepter = frameAccepter;
         this.innerSpeed = innerSpeed;
         this.middleSpeed = middleSpeed;
         this.outerSpeed = outerSpeed;
-        this.delay = delay;
+        this.runTime = runTime;
+        this.stop = false;
         new Thread(()-> run(frames)).start();
     }
 
@@ -58,6 +59,9 @@ public class ImageGenerator {
 
         Graphics2D mainImageGraphics = mainImage.createGraphics();
 
+
+        long startTime = System.currentTimeMillis();
+
         for (int i = 0; i < frames; i++) {
             BufferedImage image = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
 
@@ -73,16 +77,13 @@ public class ImageGenerator {
 
             rotateAllLines(center.getChildren(), 0);
 
-            images.accept(image);
-
-            try {
-                Thread.sleep(delay.get());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            if( System.currentTimeMillis() - startTime > runTime )
+                stop = true;
 
             if( stop )
                 return;
+
+            frameAccepter.accept(image);
         }
 
     }

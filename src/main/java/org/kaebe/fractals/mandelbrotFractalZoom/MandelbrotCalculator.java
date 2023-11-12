@@ -1,4 +1,4 @@
-package org.kaebe.mandelbrotFractalZoom;
+package org.kaebe.fractals.mandelbrotFractalZoom;
 
 public class MandelbrotCalculator {
 

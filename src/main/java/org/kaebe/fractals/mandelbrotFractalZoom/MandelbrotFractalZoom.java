@@ -1,17 +1,15 @@
-package org.kaebe.mandelbrotFractalZoom;
+package org.kaebe.fractals.mandelbrotFractalZoom;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static org.kaebe.mandelbrotFractalZoom.MandelbrotCalculator.MAX_ITERATIONS;
+import static org.kaebe.fractals.mandelbrotFractalZoom.MandelbrotCalculator.MAX_ITERATIONS;
 
 
 public class MandelbrotFractalZoom {
@@ -25,12 +23,17 @@ public class MandelbrotFractalZoom {
     private double xOffset = -0.6825430516844277;
     private double yOffset = 0.0033971134705536345;;
     private BufferedImage image = new BufferedImage(1,1,BufferedImage.TYPE_INT_RGB);
-    private ColoringScheme coloringScheme = ColoringScheme.ITERATIONS_HSB_TO_RGB;
+    private ColoringScheme coloringScheme = ColoringScheme.CUSTOM1;
 
-    public MandelbrotFractalZoom() {
+    public MandelbrotFractalZoom(Runnable openMainWindow) {
         JFrame frame = new JFrame("Mandelbrot Fractal Zoom");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                openMainWindow.run();
+            }
+        });
         frame.setSize(1920, 1080);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
 
         contentPane = new JPanel();
@@ -75,6 +78,7 @@ public class MandelbrotFractalZoom {
             }
         });
     }
+
 
     private void updateImage() {
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
@@ -202,7 +206,7 @@ public class MandelbrotFractalZoom {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
     public static void main(String[] args) {
-        new MandelbrotFractalZoom();
+        new MandelbrotFractalZoom(() -> System.exit(0));
     }
 
 

@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Fractals:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Fractals_jar</output-path>
+    <root id="archive" name="Fractals.jar">
+      <element id="module-output" name="Fractals" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../KaebeLib/KaebeLib/out/artifacts/KaebeLib_jar/KaebeLib.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
